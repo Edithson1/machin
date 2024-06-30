@@ -1,47 +1,53 @@
 import os
-import requests
-from PIL import Image
-from io import BytesIO
-from tensorflow.keras.models import load_model
-import pandas as pd
+from keras import models
 import numpy as np
-import cv2
+import tensorflow as tf
+import sys
 from contextlib import contextmanager
 import tqdm
-import streamlit as st
-
-# URL base de la API de GitHub
-api_url = 'https://api.github.com/repos/Edithson1/machin/contents/test'
-
-# Directorio local para almacenar las imágenes descargadas
-local_dir = 'imagenes_descargadas'
-os.makedirs(local_dir, exist_ok=True)
-
-# Obtener la lista de archivos del repositorio
-response = requests.get(api_url)
-files = response.json()
-
-# Mostrar la respuesta de la API en Streamlit para depuración
-st.write("Respuesta de la API de GitHub:")
-st.write(files)
-
-# Comprobar si la respuesta es una lista
-if isinstance(files, list):
-    # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
-    image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
-else:
-    st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
-
-# Descargar y guardar las imágenes
-for file in image_files:
-    image_url = file['download_url']
-    image_name = file['name']
-    response = requests.get(image_url)
-    img = Image.open(BytesIO(response.content))
-    img.save(os.path.join(local_dir, image_name))
-
-# Cargar el modelo desde Google Drive (debe estar descargado previamente como se mostró antes)
-model = load_model('model.keras')
 
 # Carpeta de las imágenes de prueba
-directorio_pruebas = local_dir
+directorio_pruebas = '/kaggle/working/upch-intro-ml/test/test'
+
+# Función para cargar y preprocesar una imagen
+def cargar_y_preprocesar_imagen(ruta_imagen):
+    imagen = cv2.imread(ruta_imagen)
+    imagen = cv2.resize(imagen, (512, 512))a
+    imagen = imagen.astype('float32') / 255.0
+    imagen = np.expand_dims(imagen, axis=-1)
+    imagen = np.expand_dims(imagen, axis=0)
+
+    return imagen
+
+
+# Context manager para suprimir la salida estándar
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:
+            yield
+        finally:
+            sys.stdout = old_stdout
+
+
+# Iteramos nuestro Data Frame de ejemplo
+
+for i, fila in tqdm.tqdm(df_samples.iterrows(), desc="Procesando imágenes", unit=" imagen"):
+    ruta_imagen = fila['ID']
+    img_array = cargar_y_preprocesar_imagen(ruta_imagen)
+
+    with suppress_stdout():
+        prediccion = model.predict(img_array)
+
+    if prediccion[0][0] >= 0.5:
+        resultado = 1
+    else:
+        resultado = 0
+
+    nombre_archivo_con_extension = os.path.basename(ruta_imagen)
+    nombre_archivo, extension = os.path.splitext(nombre_archivo_con_extension)
+    df_samples.at[i, 'ID'] = nombre_archivo
+    df_samples.at[i, 'score'] = resultado
+
