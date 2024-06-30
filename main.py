@@ -1,44 +1,38 @@
-import streamlit as st
 import os
+import requests
 from PIL import Image
+from io import BytesIO
+from keras.models import load_model
+import pandas as pd
+import numpy as np
+import cv2
+from contextlib import contextmanager
+import tqdm
 
-# Configurar directorio de almacenamiento
-DIRECTORIO_ALMACENAMIENTO = 'imagenes_subidas'
+# URL base de la API de GitHub
+api_url = 'https://api.github.com/repos/Edithson1/machin/contents/test'
 
-# Crear el directorio si no existe
-if not os.path.exists(DIRECTORIO_ALMACENAMIENTO):
-    os.makedirs(DIRECTORIO_ALMACENAMIENTO)
+# Directorio local para almacenar las imágenes descargadas
+local_dir = 'imagenes_descargadas'
+os.makedirs(local_dir, exist_ok=True)
 
-# Layout de Streamlit
-col1, col2 = st.columns([2, 1])
+# Obtener la lista de archivos del repositorio
+response = requests.get(api_url)
+files = response.json()
 
-col1.markdown("# Bienvenidos a mi app!")
-col1.markdown("Aquí va algo de información.")
+# Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
+image_files = [file for file in files if file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
 
-# Cargar archivos
-archivos_subidos = col2.file_uploader("Carga aquí tus archivos", accept_multiple_files=True)
+# Descargar y guardar las imágenes
+for file in image_files:
+    image_url = file['download_url']
+    image_name = file['name']
+    response = requests.get(image_url)
+    img = Image.open(BytesIO(response.content))
+    img.save(os.path.join(local_dir, image_name))
 
-if archivos_subidos:
-    for archivo in archivos_subidos:
-        try:
-            # Leer imagen
-            img = Image.open(archivo)
-            
-            # Mostrar imagen
-            col1.image(img, caption=archivo.name)
-            
-            # Guardar imagen
-            ruta_archivo = os.path.join(DIRECTORIO_ALMACENAMIENTO, archivo.name)
-            
-            # Verificar si el archivo ya existe y cambiar el nombre si es necesario
-            base, extension = os.path.splitext(ruta_archivo)
-            counter = 1
-            while os.path.exists(ruta_archivo):
-                ruta_archivo = f"{base}_{counter}{extension}"
-                counter += 1
+# Cargar el modelo desde Google Drive (debe estar descargado previamente como se mostró antes)
+model = load_model('model.keras')
 
-            img.save(ruta_archivo)
-        except Exception as e:
-            pass
-            
-    st.success("Archivos subidos y almacenados con éxito.")
+# Carpeta de las imágenes de prueba
+directorio_pruebas = local_dir
