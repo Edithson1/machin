@@ -11,7 +11,7 @@ import tqdm
 import streamlit as st
 
 # URL base de la API de GitHub
-api_url = 'https://api.github.com/repos/Edithson1/machin/contents/test'
+api_url = 'https://github.com/Edithson1/machin/tree/main/test'
 
 # Directorio local para almacenar las imágenes descargadas
 local_dir = 'imagenes_descargadas'
