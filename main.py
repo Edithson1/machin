@@ -19,6 +19,30 @@ else:
         if archivo.endswith('.jpg') or archivo.endswith('.png'):
             imagen_path = os.path.join(directorio_pruebas, archivo)
             rutas_imagenes.append(imagen_path)
+
+    
+    # Función para cargar y preprocesar una imagen
+    def cargar_y_preprocesar_imagen(ruta_imagen):
+        imagen = cv2.imread(ruta_imagen)
+        imagen = cv2.resize(imagen, (512, 512))a
+        imagen = imagen.astype('float32') / 255.0
+        imagen = np.expand_dims(imagen, axis=-1)
+        imagen = np.expand_dims(imagen, axis=0)
+    
+        return imagen
+    
+    
+    # Context manager para suprimir la salida estándar
+    @contextmanager
+    def suppress_stdout():
+        with open(os.devnull, "w") as devnull:
+            old_stdout = sys.stdout
+            sys.stdout = devnull
+            try:
+                yield
+            finally:
+                sys.stdout = old_stdout
+
     
     # Imprimir las rutas de las imágenes
     if rutas_imagenes:
