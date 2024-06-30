@@ -16,7 +16,7 @@ os.makedirs(local_dir, exist_ok=True)
 response = requests.get(api_url)
 
 # Comprobar si la respuesta fue exitosa (código de estado 200)
-if response.status_code == 200:
+if True:
     files = response.json()
     
     # Mostrar la respuesta de la API en Streamlit para depuración
