@@ -48,10 +48,3 @@ if response.status_code == 200:
         st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
 else:
     st.error(f"Error al obtener archivos del repositorio. Código de estado: {response.status_code}")
-
-# Mostrar imágenes descargadas en Streamlit
-if os.path.exists(local_dir):
-    image_files = os.listdir(local_dir)
-    st.write("Imágenes descargadas:")
-    for image_file in image_files:
-        st.write(f"Nombre: {image_file}")
