@@ -5,3 +5,4 @@ pillow
 pandas
 tqdm
 opencv-python-headless
+gdown
