@@ -20,14 +20,25 @@ archivos_subidos = col2.file_uploader("Carga aquí tus archivos", accept_multipl
 
 if archivos_subidos:
     for archivo in archivos_subidos:
-        # Leer imagen
-        img = Image.open(archivo)
-        
-        # Mostrar imagen
-        col1.image(img, caption=archivo.name)
+        try:
+            # Leer imagen
+            img = Image.open(archivo)
+            
+            # Mostrar imagen
+            col1.image(img, caption=archivo.name)
+            
+            # Guardar imagen
+            ruta_archivo = os.path.join(DIRECTORIO_ALMACENAMIENTO, archivo.name)
+            
+            # Verificar si el archivo ya existe y cambiar el nombre si es necesario
+            base, extension = os.path.splitext(ruta_archivo)
+            counter = 1
+            while os.path.exists(ruta_archivo):
+                ruta_archivo = f"{base}_{counter}{extension}"
+                counter += 1
 
-        # Guardar imagen
-        ruta_archivo = os.path.join(DIRECTORIO_ALMACENAMIENTO, archivo.name)
-        img.save(ruta_archivo)
-        
+            img.save(ruta_archivo)
+        except Exception as e:
+            st.error(f"Ocurrió un error al procesar el archivo {archivo.name}: {e}")
+            
     st.success("Archivos subidos y almacenados con éxito.")
