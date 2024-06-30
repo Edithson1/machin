@@ -76,8 +76,9 @@ try:
     df_resultados = pd.DataFrame(resultados)
     st.dataframe(df_resultados)
 
+except requests.exceptions.HTTPError as e:
+    st.error(f"Error al realizar la solicitud HTTP a la API de GitHub: {str(e)}")
 except requests.exceptions.RequestException as e:
     st.error(f"Error al realizar la solicitud a la API de GitHub: {str(e)}")
 except Exception as e:
     st.error(f"Error inesperado: {str(e)}")
-
