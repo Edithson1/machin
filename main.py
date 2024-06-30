@@ -2,7 +2,7 @@ import os
 import streamlit as st
 
 # Carpeta de las imágenes de prueba
-directorio_pruebas = '/test'
+directorio_pruebas = 'test'
 
 # Verificar si el directorio existe antes de listar archivos
 if not os.path.exists(directorio_pruebas):
