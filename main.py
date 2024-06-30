@@ -1,3 +1,5 @@
+!pip install tensorflow keras
+
 import os
 import requests
 from PIL import Image
