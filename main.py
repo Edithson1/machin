@@ -49,11 +49,11 @@ if response.status_code == 200:
 else:
     st.error(f"Error al obtener archivos del repositorio. Código de estado: {response.status_code}")
 
-# Mostrar imágenes descargadas en Streamlit
+# Mostrar nombres de imágenes descargadas en Streamlit dentro de expanders
 if os.path.exists(local_dir):
-    image_files = os.listdir(local_dir)
     st.write("Imágenes descargadas:")
     for image_file in image_files:
         image_path = os.path.join(local_dir, image_file)
-        st.image(image_path, caption=image_file)
+        with st.expander(f"Ver nombre de archivo: {image_file}"):
+            st.write(f"Nombre del archivo: {image_file}")
 
