@@ -1,24 +1,23 @@
 import os
-from keras import models
+import cv2
 import numpy as np
+import pandas as pd
 import tensorflow as tf
-import sys
+from keras.models import load_model
 from contextlib import contextmanager
 import tqdm
 
-# Carpeta de las imágenes de prueba
+# Definir directorio de imágenes de prueba
 directorio_pruebas = '/kaggle/working/upch-intro-ml/test/test'
 
 # Función para cargar y preprocesar una imagen
 def cargar_y_preprocesar_imagen(ruta_imagen):
     imagen = cv2.imread(ruta_imagen)
-    imagen = cv2.resize(imagen, (512, 512))a
+    imagen = cv2.resize(imagen, (512, 512))
     imagen = imagen.astype('float32') / 255.0
     imagen = np.expand_dims(imagen, axis=-1)
     imagen = np.expand_dims(imagen, axis=0)
-
     return imagen
-
 
 # Context manager para suprimir la salida estándar
 @contextmanager
@@ -31,10 +30,8 @@ def suppress_stdout():
         finally:
             sys.stdout = old_stdout
 
-
-# Iteramos nuestro Data Frame de ejemplo
-
-for i, fila in tqdm.tqdm(df_samples.iterrows(), desc="Procesando imágenes", unit=" imagen"):
+# Iterar sobre el DataFrame de ejemplo (asumiendo que df_samples está definido previamente)
+for i, fila in tqdm.tqdm(df_samples.iterrows(), desc="Procesando imágenes", unit="imagen"):
     ruta_imagen = fila['ID']
     img_array = cargar_y_preprocesar_imagen(ruta_imagen)
 
@@ -46,8 +43,12 @@ for i, fila in tqdm.tqdm(df_samples.iterrows(), desc="Procesando imágenes", uni
     else:
         resultado = 0
 
+    # Actualizar el DataFrame con el resultado
     nombre_archivo_con_extension = os.path.basename(ruta_imagen)
     nombre_archivo, extension = os.path.splitext(nombre_archivo_con_extension)
     df_samples.at[i, 'ID'] = nombre_archivo
-    df_samples.at[i, 'score'] = resultado
+    df_samples.at[i, 'score'] = resultado
+
+# Guardar el DataFrame actualizado si es necesario
+# df_samples.to_csv('resultados.csv', index=False)
 
