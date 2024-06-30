@@ -1,16 +1,9 @@
 import os
 import requests
-import gdown
 from PIL import Image
 from io import BytesIO
 from tensorflow.keras.models import load_model
-import pandas as pd
-import numpy as np
-import cv2
-from contextlib import contextmanager
-import tqdm
 import streamlit as st
-
 
 # URL base de la API de GitHub
 api_url = 'https://api.github.com/repos/Edithson1/machin/contents/test'
@@ -21,34 +14,46 @@ os.makedirs(local_dir, exist_ok=True)
 
 # Obtener la lista de archivos del repositorio
 response = requests.get(api_url)
-files = response.json()
 
-# Mostrar la respuesta de la API en Streamlit para depuración
-st.write("Respuesta de la API de GitHub:")
-st.write(files)
+# Comprobar si la respuesta fue exitosa (código de estado 200)
+if response.status_code == 200:
+    files = response.json()
+    
+    # Mostrar la respuesta de la API en Streamlit para depuración
+    st.write("Respuesta de la API de GitHub:")
+    st.write(files)
 
-# Comprobar si la respuesta es una lista
-if isinstance(files, list):
-    # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
-    image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
+    # Comprobar si la respuesta es una lista
+    if isinstance(files, list):
+        # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
+        image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
+        
+        # Descargar y guardar las imágenes
+        for file in image_files:
+            image_url = file['download_url']
+            image_name = file['name']
+            response = requests.get(image_url)
+            img = Image.open(BytesIO(response.content))
+            img.save(os.path.join(local_dir, image_name))
+            
+        # Cargar el modelo desde un archivo local (asegúrate de que el modelo esté en el mismo directorio)
+        model_path = 'model.keras'
+        if os.path.exists(model_path):
+            model = load_model(model_path)
+            st.success("Modelo cargado correctamente.")
+        else:
+            st.error(f"No se encontró el archivo del modelo en '{model_path}'.")
+            
+    else:
+        st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
 else:
-    st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
+    st.error(f"Error al obtener archivos del repositorio. Código de estado: {response.status_code}")
 
-if isinstance(files, list):
-    # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
-    image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
-    # Descargar y guardar las imágenes
-    for file in image_files:
-        image_url = file['download_url']
-        image_name = file['name']
-        response = requests.get(image_url)
-        img = Image.open(BytesIO(response.content))
-        img.save(os.path.join(local_dir, image_name))
-else:
-    st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
+# Mostrar imágenes descargadas en Streamlit
+if os.path.exists(local_dir):
+    image_files = os.listdir(local_dir)
+    st.write("Imágenes descargadas:")
+    for image_file in image_files:
+        image_path = os.path.join(local_dir, image_file)
+        st.image(image_path, caption=image_file)
 
-# Cargar el modelo desde Google Drive (debe estar descargado previamente como se mostró antes)
-model = load_model('model.keras')
-
-# Carpeta de las imágenes de prueba
-directorio_pruebas = local_dir
