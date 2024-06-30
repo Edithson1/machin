@@ -34,13 +34,18 @@ if isinstance(files, list):
 else:
     st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
 
-# Descargar y guardar las imágenes
-for file in image_files:
-    image_url = file['download_url']
-    image_name = file['name']
-    response = requests.get(image_url)
-    img = Image.open(BytesIO(response.content))
-    img.save(os.path.join(local_dir, image_name))
+if isinstance(files, list):
+    # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
+    image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
+    # Descargar y guardar las imágenes
+    for file in image_files:
+        image_url = file['download_url']
+        image_name = file['name']
+        response = requests.get(image_url)
+        img = Image.open(BytesIO(response.content))
+        img.save(os.path.join(local_dir, image_name))
+else:
+    st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
 
 # Cargar el modelo desde Google Drive (debe estar descargado previamente como se mostró antes)
 model = load_model('model.keras')
