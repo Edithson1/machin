@@ -39,6 +39,6 @@ if archivos_subidos:
 
             img.save(ruta_archivo)
         except Exception as e:
-            st.error(f"Ocurrió un error al procesar el archivo {archivo.name}: {e}")
+            pass
             
     st.success("Archivos subidos y almacenados con éxito.")
