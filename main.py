@@ -11,8 +11,19 @@ else:
     # Lista todos los archivos en el directorio de pruebas
     archivos = os.listdir(directorio_pruebas)
     
-    # Mostrar cada imagen en Streamlit
+    # Lista para almacenar las rutas de las imágenes
+    rutas_imagenes = []
+    
+    # Obtener las rutas de las imágenes y guardarlas en la lista
     for archivo in archivos:
         if archivo.endswith('.jpg') or archivo.endswith('.png'):
             imagen_path = os.path.join(directorio_pruebas, archivo)
-            st.image(imagen_path, caption=archivo, use_column_width=True)
+            rutas_imagenes.append(imagen_path)
+    
+    # Imprimir las rutas de las imágenes
+    if rutas_imagenes:
+        st.write("Rutas de las imágenes:")
+        for ruta in rutas_imagenes:
+            st.write(ruta)
+    else:
+        st.write("No se encontraron imágenes en el directorio especificado.")
