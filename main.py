@@ -1,50 +1,20 @@
 import os
-import requests
-from PIL import Image
-from io import BytesIO
-from tensorflow.keras.models import load_model
-import streamlit as st
+from keras import models
+import numpy as np
+import tensorflow as tf
+import sys
+from contextlib import contextmanager
+import tqdm
 
-# URL base de la API de GitHub
-api_url = 'https://github.com/Edithson1/machin/tree/main/test'
 
-# Directorio local para almacenar las imágenes descargadas
-local_dir = 'imagenes_descargadas'
-os.makedirs(local_dir, exist_ok=True)
+# Carpeta de las imágenes de prueba
+directorio_pruebas = '/kaggle/working/upch-intro-ml/test/test'
 
-# Obtener la lista de archivos del repositorio
-response = requests.get(api_url)
+# Lista todos los archivos en el directorio de pruebas
+archivos = os.listdir(directorio_pruebas)
 
-# Comprobar si la respuesta fue exitosa (código de estado 200)
-if True:
-    files = response.json()
-    
-    # Mostrar la respuesta de la API en Streamlit para depuración
-    st.write("Respuesta de la API de GitHub:")
-    st.write(files['url'])
-
-    # Comprobar si la respuesta es una lista
-    if isinstance(files, list):
-        # Filtrar solo las imágenes (asumiendo que las imágenes tienen extensiones conocidas)
-        image_files = [file for file in files if 'name' in file and file['name'].lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
-        
-        # Descargar y guardar las imágenes
-        for file in image_files:
-            image_url = file['download_url']
-            image_name = file['name']
-            response = requests.get(image_url)
-            img = Image.open(BytesIO(response.content))
-            img.save(os.path.join(local_dir, image_name))
-            
-        # Cargar el modelo desde un archivo local (asegúrate de que el modelo esté en el mismo directorio)
-        model_path = 'model.keras'
-        if os.path.exists(model_path):
-            model = load_model(model_path)
-            st.success("Modelo cargado correctamente.")
-        else:
-            st.error(f"No se encontró el archivo del modelo en '{model_path}'.")
-            
-    else:
-        st.error("La respuesta de la API no es una lista. Verifique la URL y los permisos del repositorio.")
-else:
-    st.error(f"Error al obtener archivos del repositorio. Código de estado: {response.status_code}")
+# Mostrar cada imagen en Streamlit
+for archivo in archivos:
+    if archivo.endswith('.jpg') or archivo.endswith('.png'):
+        imagen_path = os.path.join(directorio_pruebas, archivo)
+        st.image(imagen_path, caption=archivo, use_column_width=True)
