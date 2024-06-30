@@ -21,7 +21,7 @@ if response.status_code == 200:
     
     # Mostrar la respuesta de la API en Streamlit para depuración
     st.write("Respuesta de la API de GitHub:")
-    st.write(files)
+    st.write(files['url'])
 
     # Comprobar si la respuesta es una lista
     if isinstance(files, list):
