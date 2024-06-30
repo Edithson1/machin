@@ -55,4 +55,5 @@ if os.path.exists(local_dir):
     st.write("Imágenes descargadas:")
     for image_file in image_files:
         image_path = os.path.join(local_dir, image_file)
-        st.image(image_path, caption=image_file)
+        st.write(f"Nombre: {image_file}")
+        st.write(f"URL: {image_path}")
