@@ -39,17 +39,6 @@ else:
     
         return imagen
     
-    
-    # Context manager para suprimir la salida estándar
-    @contextmanager
-    def suppress_stdout():
-        with open(os.devnull, "w") as devnull:
-            old_stdout = sys.stdout
-            sys.stdout = devnull
-            try:
-                yield
-            finally:
-                sys.stdout = old_stdout
 
     # Función para descargar el archivo desde Google Drive
     def descargar_desde_google_drive(url, archivo_destino):
