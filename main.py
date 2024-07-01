@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import cv2
 import numpy as np
+import pandas as pd
 from tensorflow.keras.models import load_model
 
 # Carpeta de las imágenes de prueba
