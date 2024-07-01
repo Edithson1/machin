@@ -10,9 +10,10 @@ st.title('Proyecto final Machin Learning')
 st.write('Detección de retinopatías diabéticas.')
 
 uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
-if uploaded_file is not None:
+if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
+        st.write(image)
         st.image(image, caption=f"Imagen a predecir")
 
 
