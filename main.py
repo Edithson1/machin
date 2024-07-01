@@ -6,16 +6,8 @@ import pandas as pd
 from PIL import Image
 from tensorflow.keras.models import load_model
 
-st.title('Proyecto final Machin Learning')
-st.write('Detección de retinopatías diabéticas.')
-
-uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
-if uploaded_files is not None:
-    for uploaded_file in uploaded_files:
-        image = Image.open(uploaded_file)
-        st.write(image)
-        st.image(image, caption=f"Imagen a predecir")
-
+# Cargar el modelo
+modelo = load_model('modelo_eficiente1.keras')
 
 # Carpeta de las imágenes de prueba
 directorio_pruebas = 'test'
@@ -30,8 +22,26 @@ def cargar_y_preprocesar_imagen(ruta_imagen):
     
     return imagen
 
-    # Cargar el modelo
-modelo = load_model('modelo_eficiente1.keras')
+
+st.title('Proyecto final Machin Learning')
+st.write('Detección de retinopatías diabéticas.')
+
+uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
+if uploaded_files is not None:
+    for uploaded_file in uploaded_files:
+        image = Image.open(uploaded_file)
+        image = image.resize((512, 512))
+        prediccion = modelo.predict(image)
+        if prediccion[0][0] >= 0.5:
+            resultado = 1
+        else:
+            resultado = 0
+        st.image(image, caption=f'Prediccion: {resultado}', use_column_width=True)
+        
+
+
+
+
 
 
 # Verificar si el directorio existe antes de listar archivos
