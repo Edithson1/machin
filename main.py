@@ -39,6 +39,9 @@ else:
     modelo = load_model('modelo_eficiente1.keras')
     st.write("Modelo cargado correctamente.")
 
+    # Dataframe para almacenar nombres de imágenes y predicciones
+    df_resultados = pd.DataFrame(columns=['ID', 'score'])
+    
     # Procesar y predecir para cada imagen
     if rutas_imagenes:
         for ruta_imagen in rutas_imagenes:
@@ -48,6 +51,7 @@ else:
                 prediccion[0][0] = 1
             else:
                 prediccion[0][0] = 0
+            st.write(ruta_imagen)
             st.image(ruta_imagen, caption=f"Predicción: {prediccion[0][0]}")
     else:
         st.write("No se encontraron imágenes en el directorio especificado.")
