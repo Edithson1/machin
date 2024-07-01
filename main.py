@@ -54,7 +54,7 @@ else:
             else:
                 resultado = 0
             resultados.append({'Nombre de la imagen': nombre_imagen, 'score': resultado})
-        f_resultados = pd.DataFrame(resultados)
+        df_resultados = pd.DataFrame(resultados)
         st.write("Resultados de las predicciones:")
         st.dataframe(df_resultados)
     else:
