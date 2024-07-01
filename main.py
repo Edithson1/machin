@@ -30,10 +30,10 @@ uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
-        imagen = cv2.resize(imagen, (512, 512))
-        imagen = imagen.astype('float32') / 255.0
-        imagen = np.expand_dims(imagen, axis=-1)
-        imagen = np.expand_dims(imagen, axis=0)
+        image = cv2.resize(image, (512, 512))
+        image = image.astype('float32') / 255.0
+        image = np.expand_dims(image, axis=-1)
+        image = np.expand_dims(image, axis=0)
         prediccion = modelo.predict(image)
         if prediccion[0][0] >= 0.5:
             resultado = 1
