@@ -29,6 +29,7 @@ st.write('Detección de retinopatías diabéticas.')
 uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
+        imagen = Image.open(uploaded_file)
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
         image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
         image = cv2.resize(image, (512, 512))
@@ -40,7 +41,7 @@ if uploaded_files is not None:
             resultado = 1
         else:
             resultado = 0
-        st.image(image, caption=f'Prediccion: {resultado}', use_column_width=True)
+        st.image(imagen, caption=f'Prediccion: {resultado}', use_column_width=True)
         
 
 
