@@ -16,29 +16,25 @@ directorio_pruebas = 'test'
 def cargar_y_preprocesar_imagen(imagen):
     imagen = cv2.resize(imagen, (512, 512))
     imagen = imagen.astype('float32') / 255.0
-    imagen = np.expand_dims(imagen, axis=-1)
-    imagen = np.expand_dims(imagen, axis=0)
-    
+    imagen = np.expand_dims(imagen, axis=0)  # No es necesario expandir el eje de canal si la imagen es a color
     return imagen
 
+# Título y descripción en la interfaz de usuario
 st.title('Proyecto final Machine Learning')
 st.write('Detección de retinopatías diabéticas.')
 
+# Cargar imágenes subidas por el usuario
 uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
+
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
         image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
         imagen_preparada = cargar_y_preprocesar_imagen(image)
         prediccion = modelo.predict(imagen_preparada)
-        if prediccion[0][0] >= 0.5:
-            resultado = 1
-        else:
-            resultado = 0
+        resultado = 1 if prediccion[0][0] >= 0.5 else 0
         original = Image.open(uploaded_file)
         st.image(original, caption=f'Predicción: {resultado}', use_column_width=True)
-
-
 
 # Verificar si el directorio existe antes de listar archivos
 if not os.path.exists(directorio_pruebas):
@@ -56,30 +52,26 @@ else:
             imagen_path = os.path.join(directorio_pruebas, archivo)
             rutas_imagenes.append(imagen_path)
 
-    # Procesar y predecir para cada imagen
-    st.write("Presione este boton para predecir la actividad")
-    if st.button('Presionar aquí'):
+    # Procesar y predecir para cada imagen en el directorio de pruebas
+    if st.button('Presionar aquí para predecir'):
         resultados = []
-        st.write(len(rutas_imagenes))
         if rutas_imagenes:
             for ruta_imagen in rutas_imagenes:
                 ruta = cv2.imread(ruta_imagen)
                 nombre_imagen = os.path.basename(ruta_imagen)
                 imagen_procesada = cargar_y_preprocesar_imagen(ruta)
                 prediccion = modelo.predict(imagen_procesada)
-                if prediccion[0][0] >= 0.5:
-                    resultado = 1
-                else:
-                    resultado = 0
+                resultado = 1 if prediccion[0][0] >= 0.5 else 0
                 resultados.append({'Nombre de la imagen': nombre_imagen, 'score': resultado})
             df_resultados = pd.DataFrame(resultados)
             st.write("Resultados de las predicciones:")
             st.dataframe(df_resultados)
-        else:
-            st.write("No se encontraron imágenes en el directorio especificado.")
-    
-        if st.button('Exportar tabla a CSV') and len(resultados) > 0:
-                # Guardar el dataframe como archivo CSV
+            
+            # Botón para exportar resultados a CSV
+            if st.button('Exportar tabla a CSV'):
                 nombre_archivo = 'resultados_predicciones.csv'
                 df_resultados.to_csv(nombre_archivo, index=False)
                 st.success(f"Tabla exportada correctamente como '{nombre_archivo}'")
+        else:
+            st.write("No se encontraron imágenes en el directorio especificado.")
+
