@@ -13,16 +13,15 @@ modelo = load_model('modelo_eficiente1.keras')
 directorio_pruebas = 'test'
 
 # Función para cargar y preprocesar una imagen
-def cargar_y_preprocesar_imagen(image):
-    imagen = cv2.resize(image, (512, 512))
+def cargar_y_preprocesar_imagen(imagen):
+    imagen = cv2.resize(imagen, (512, 512))
     imagen = imagen.astype('float32') / 255.0
     imagen = np.expand_dims(imagen, axis=-1)
     imagen = np.expand_dims(imagen, axis=0)
     
     return imagen
 
-
-st.title('Proyecto final Machin Learning')
+st.title('Proyecto final Machine Learning')
 st.write('Detección de retinopatías diabéticas.')
 
 uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
@@ -37,7 +36,8 @@ if uploaded_files is not None:
         else:
             resultado = 0
         original = Image.open(uploaded_file)
-        st.image(original, caption=f'Prediccion: {resultado}', use_column_width=True)
+        st.image(original, caption=f'Predicción: {resultado}', use_column_width=True)
+
         
 
 
