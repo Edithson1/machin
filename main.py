@@ -14,7 +14,6 @@ directorio_pruebas = 'test'
 
 # Función para cargar y preprocesar una imagen
 def cargar_y_preprocesar_imagen(ruta_imagen):
-    imagen = cv2.imread(ruta_imagen)
     imagen = cv2.resize(imagen, (512, 512))
     imagen = imagen.astype('float32') / 255.0
     imagen = np.expand_dims(imagen, axis=-1)
@@ -29,18 +28,15 @@ st.write('Detección de retinopatías diabéticas.')
 uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
-        original = Image.open(uploaded_file)
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
         image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        image = cv2.resize(image, (512, 512))
-        image = image.astype('float32') / 255.0
-        image = np.expand_dims(image, axis=-1)
-        image = np.expand_dims(image, axis=0)
-        prediccion = modelo.predict(image)
+        imagen_preparada = cargar_y_preprocesar_imagen(image)
+        prediccion = modelo.predict(imagen_preparada)
         if prediccion[0][0] >= 0.5:
             resultado = 1
         else:
             resultado = 0
+        original = Image.open(uploaded_file)
         st.image(original, caption=f'Prediccion: {resultado}', use_column_width=True)
         
 
@@ -72,8 +68,9 @@ else:
         st.write(len(rutas_imagenes))
         if rutas_imagenes:
             for ruta_imagen in rutas_imagenes:
-                nombre_imagen = os.path.basename(ruta_imagen)
-                imagen_procesada = cargar_y_preprocesar_imagen(ruta_imagen)
+                ruta = cv2.imread(ruta_imagen)
+                nombre_imagen = os.path.basename(ruta)
+                imagen_procesada = cargar_y_preprocesar_imagen(ruta)
                 prediccion = modelo.predict(imagen_procesada)
                 if prediccion[0][0] >= 0.5:
                     resultado = 1
