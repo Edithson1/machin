@@ -55,14 +55,14 @@ else:
     if not os.path.exists(archivo_modelo):
         if descargar_desde_google_drive(url, archivo_modelo):
             st.write(f"Archivo descargado correctamente como {archivo_modelo}")
+            # Cargar el modelo desde el archivo descargado
+            modelo = load_model(archivo_modelo)
+            
+            # Ejemplo de uso del modelo en Streamlit
+            st.write("Modelo cargado correctamente. Puedes comenzar a hacer predicciones.")
         else:
             st.error("Error al descargar el archivo desde Google Drive. Verifica la URL.")
     
-    # Cargar el modelo desde el archivo descargado
-    modelo = load_model(archivo_modelo)
-    
-    # Ejemplo de uso del modelo en Streamlit
-    st.write("Modelo cargado correctamente. Puedes comenzar a hacer predicciones.")
     
     # Imprimir las rutas de las imágenes
     if rutas_imagenes:
