@@ -32,7 +32,7 @@ else:
     # Función para cargar y preprocesar una imagen
     def cargar_y_preprocesar_imagen(ruta_imagen):
         imagen = cv2.imread(ruta_imagen)
-        imagen = cv2.resize(imagen, (512, 512))a
+        imagen = cv2.resize(imagen, (512, 512))
         imagen = imagen.astype('float32') / 255.0
         imagen = np.expand_dims(imagen, axis=-1)
         imagen = np.expand_dims(imagen, axis=0)
