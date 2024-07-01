@@ -11,7 +11,7 @@ st.write('Detección de retinopatías diabéticas.')
 
 uploaded_file = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 if uploaded_file is not None:
-    for uploaded_file in uploaded_files
+    for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
         st.image(image, caption=f"Imagen a predecir")
 
