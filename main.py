@@ -38,11 +38,6 @@ if uploaded_files is not None:
         original = Image.open(uploaded_file)
         st.image(original, caption=f'Predicción: {resultado}', use_column_width=True)
 
-        
-
-
-
-
 
 
 # Verificar si el directorio existe antes de listar archivos
@@ -69,7 +64,7 @@ else:
         if rutas_imagenes:
             for ruta_imagen in rutas_imagenes:
                 ruta = cv2.imread(ruta_imagen)
-                nombre_imagen = os.path.basename(ruta)
+                nombre_imagen = os.path.basename(ruta_imagen)
                 imagen_procesada = cargar_y_preprocesar_imagen(ruta)
                 prediccion = modelo.predict(imagen_procesada)
                 if prediccion[0][0] >= 0.5:
@@ -82,3 +77,9 @@ else:
             st.dataframe(df_resultados)
         else:
             st.write("No se encontraron imágenes en el directorio especificado.")
+    
+        if st.button('Exportar tabla a CSV') and len(resultados) > 0:
+                # Guardar el dataframe como archivo CSV
+                nombre_archivo = 'resultados_predicciones.csv'
+                df_resultados.to_csv(nombre_archivo, index=False)
+                st.success(f"Tabla exportada correctamente como '{nombre_archivo}'")
