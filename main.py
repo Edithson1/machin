@@ -46,13 +46,15 @@ else:
     # Procesar y predecir para cada imagen
     if rutas_imagenes:
         for ruta_imagen in rutas_imagenes:
+            nombre_imagen = os.path.basename(ruta_imagen)
             imagen_procesada = cargar_y_preprocesar_imagen(ruta_imagen)
             prediccion = modelo.predict(imagen_procesada)
             if prediccion[0][0] >= 0.5:
                 prediccion[0][0] = 1
             else:
                 prediccion[0][0] = 0
-            st.write(ruta_imagen)
-            st.image(ruta_imagen, caption=f"Predicción: {prediccion[0][0]}")
+            df_resultados = df_resultados.append({'ID': nombre_imagen, 'score': resultado}, ignore_index=True)
+        st.write("Resultados de las predicciones:")
+        st.dataframe(df_resultados)
     else:
         st.write("No se encontraron imágenes en el directorio especificado.")
