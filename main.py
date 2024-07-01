@@ -53,7 +53,7 @@ else:
                 prediccion[0][0] = 1
             else:
                 prediccion[0][0] = 0
-            df_resultados = df_resultados.append({'ID': nombre_imagen, 'score': resultado}, ignore_index=True)
+            df_resultados = df_resultados.append({'ID': nombre_imagen, 'score': prediccion[0][0]}, ignore_index=True)
         st.write("Resultados de las predicciones:")
         st.dataframe(df_resultados)
     else:
