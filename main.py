@@ -44,6 +44,7 @@ else:
     resultados = []
     
     # Procesar y predecir para cada imagen
+    st.write(len(rutas_imagenes))
     if rutas_imagenes:
         for ruta_imagen in rutas_imagenes:
             nombre_imagen = os.path.basename(ruta_imagen)
@@ -53,6 +54,7 @@ else:
                 resultado = 1
             else:
                 resultado = 0
+            st.write(nombre_imagen+"    completado")
             resultados.append({'Nombre de la imagen': nombre_imagen, 'score': resultado})
         df_resultados = pd.DataFrame(resultados)
         st.write("Resultados de las predicciones:")
