@@ -41,7 +41,7 @@ else:
     st.write("Modelo cargado correctamente.")
 
     # Dataframe para almacenar nombres de imágenes y predicciones
-    df_resultados = pd.DataFrame(columns=['ID', 'score'])
+    df_resultados = pd.DataFrame(columns=['Nombre de la imagen', 'score'])
     
     # Procesar y predecir para cada imagen
     if rutas_imagenes:
@@ -53,7 +53,7 @@ else:
                 prediccion[0][0] = 1
             else:
                 prediccion[0][0] = 0
-            df_resultados = df_resultados.append({'ID': nombre_imagen, 'score': prediccion[0][0]}, ignore_index=True)
+            df_resultados = df_resultados.append({'Nombre de la imagen': nombre_imagen, 'score': prediccion[0][0]}, ignore_index=True)
         st.write("Resultados de las predicciones:")
         st.dataframe(df_resultados)
     else:
