@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model
 st.title('Proyecto final Machin Learning')
 st.write('Detección de retinopatías diabéticas.')
 
-uploaded_file = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
+uploaded_files = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 if uploaded_file is not None:
     for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
