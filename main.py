@@ -44,10 +44,10 @@ else:
         for ruta_imagen in rutas_imagenes:
             imagen_procesada = cargar_y_preprocesar_imagen(ruta_imagen)
             prediccion = modelo.predict(imagen_procesada)
-            if prediccion >= 0.5:
-                prediccion = 1
+            if prediccion[0][0] >= 0.5:
+                prediccion[0][0] = 1
             else:
-                prediccion = 0
-            st.image(ruta_imagen, caption=f"Predicción: {prediccion}")
+                prediccion[0][0] = 0
+            st.image(ruta_imagen, caption=f"Predicción: {prediccion[0][0]}")
     else:
         st.write("No se encontraron imágenes en el directorio especificado.")
