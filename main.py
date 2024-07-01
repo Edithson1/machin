@@ -77,6 +77,6 @@ else:
     
     # Imprimir las rutas de las imágenes
     if rutas_imagenes:
-        st.write("Rutas de las imágenes:")
+        st.write("Imagenes cargadas correctamente")
     else:
         st.write("No se encontraron imágenes en el directorio especificado.")
