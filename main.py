@@ -9,9 +9,11 @@ from tensorflow.keras.models import load_model
 st.title('Proyecto final Machin Learning')
 st.write('Detección de retinopatías diabéticas.')
 
-uploaded_file = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'])
+uploaded_file = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 if uploaded_file is not None:
-    st.image(uploaded_file, caption=f"Imagen a predecir")
+    for uploaded_file in uploaded_files
+        image = Image.open(uploaded_file)
+        st.image(image, caption=f"Imagen a predecir")
 
 
 # Carpeta de las imágenes de prueba
