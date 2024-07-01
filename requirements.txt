@@ -1,8 +1,8 @@
-keras
-requests
-pillow
-pandas
 streamlit
 tensorflow
 opencv-python
 numpy
+keras
+requests
+pillow
+pandas
