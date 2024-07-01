@@ -1,8 +1,8 @@
-tensorflow
 keras
 requests
 pillow
 pandas
-tqdm
-opencv-python-headless
-gdown
+streamlit
+tensorflow
+opencv-python
+numpy
