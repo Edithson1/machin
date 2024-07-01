@@ -5,6 +5,14 @@ import numpy as np
 import pandas as pd
 from tensorflow.keras.models import load_model
 
+st.title('Proyecto final Machin Learning')
+st.write('Detección de retinopatías diabéticas.')
+
+uploaded_file = st.file_uploader("Selecciona una imagen", type=['jpg', 'jpeg', 'png'])
+if uploaded_file is not None:
+    st.image(uploaded_file, caption=f"Imagen a predecir")
+
+
 # Carpeta de las imágenes de prueba
 directorio_pruebas = 'test'
 
@@ -54,7 +62,6 @@ else:
                 resultado = 1
             else:
                 resultado = 0
-            st.write(nombre_imagen+"    completado")
             resultados.append({'Nombre de la imagen': nombre_imagen, 'score': resultado})
         df_resultados = pd.DataFrame(resultados)
         st.write("Resultados de las predicciones:")
